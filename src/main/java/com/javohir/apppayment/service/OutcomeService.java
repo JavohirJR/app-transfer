@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -82,15 +83,24 @@ public class OutcomeService {
         return new ApiResponse("Successfully transferred!!!", true);
     }
 
-    public ApiResponse getOutcomes(HttpServletRequest httpServletRequest){
+    public ApiResponse getOutcomes(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");
         token = token.substring(7);
         String username = jwtProvider.getUsernameFromToken(token);
 
-        outcomeRepository
+        if (username.equals("admin")) {
+            List<Outcome> all = outcomeRepository.findAll();
+            if (all.isEmpty())
+                return new ApiResponse("Transaksiya hali amalga oshirilmagan", false);
+            return new ApiResponse("Success", true, all);
+        }
 
+        List<Outcome> outcomes = outcomeRepository.findOutcomes(username);
+        if (outcomes.isEmpty()) {
+            return new ApiResponse("Transaksiya hali amalga oshirilmagan", false);
+        }
+        return new ApiResponse("Success", true, outcomes);
 
-        return new ApiResponse("Success", true);
     }
 
 }

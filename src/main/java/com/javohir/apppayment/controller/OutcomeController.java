@@ -6,10 +6,7 @@ import com.javohir.apppayment.service.OutcomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +23,12 @@ public class OutcomeController {
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
-
+    //USERLAR va ADMIN uchun outcomelarni olish
+    @GetMapping
+    public HttpEntity<?> get(HttpServletRequest httpServletRequest) {
+        ApiResponse response = outcomeService.getOutcomes(httpServletRequest);
+        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+    }
 
 
 }
